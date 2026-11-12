@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Medicare Health Solutions</title>
+    <!-- CSS FILE -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <!-- favicon -->
+    <link rel="icon" type="image/x-icon" href="/static/favicon.png">
+    <!-- fontawesome cdn -->
+    <script src="https://kit.fontawesome.com/47bfcb75ec.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+     <!-- Select2 CSS -->
+     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/css/select2.min.css" rel="stylesheet" />
+     <!-- Include jQuery (required for Select2) -->
+     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+
+</head>
+<style>
+    /* Customize Select2 dropdown */
+    .select2-container--default .select2-selection--multiple {
+        background: #fff;
+        border: 1px solid #007bff;
+        border-radius: 5px;
+        min-height: 80px;
+        padding: 2px 4px;
+        font-size: 16px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice {
+        display: flex;
+        align-items: center;
+        border: none;
+        color: #333;
+        font-size: 16px;
+    }
+
+    .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+        color: rgb(213, 28, 28);
+        font-size: 20px;
+        margin-right: 4px;
+    }
+
+    .select2-container--default .select2-selection__clear {
+        font-size: 20px;
+        width: 30px;
+        height: 30px;
+        border-radius: 50px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: red;
+        cursor: pointer;
+    }
+</style>
+
+<body>
+
+    <!-- Header -->
+    <header>
+        <div class="logo" onclick="location.reload()">
+            <img src="{{ url_for('static', filename='img2.png') }}" alt="logo">
+            <h2>M.H.S</h2>
+        </div>
+
+        <nav id="navMenu">
+            <a href="#">Home</a>
+            <a href="/about">About</a>
+            <a href="/contact">Contact</a>
+            <a href="/developer">Developer</a>
+            <a href="/blog">Blog</a>
+        </nav>
+
+        <div class="hamburger" id="hamburgermenu">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </header>
+
+    <main>
+        <!-- input box -->
+        <div class="input-container">
+            <div class="form-container">
+                <form method="POST" action="/predict">
+                    <label for="symptoms" class="form-label">Select Your Symptoms</label>
+                    <select id="symptoms" name="symptoms" multiple="multiple" style="width: 100%;">
+                        {% for symptom in symptoms_dict.keys() %}
+                        <option value="{{ symptom }}" {% if symptom in selected_symptoms %} selected {% endif %}>
+                            {{ symptom.replace('_', ' ').title() }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <!-- Display the message (if any) -->
+                    {% if message %}
+                    <div class="error-message">
+                        {{ message }}
+                    </div>
+                    {% endif %}
+                    <button type="submit" class="submit-btn">Analyze Symptoms</button>
+                </form>
+            </div>
+        </div>
+
+        {% if predicted_disease %}
+        <!-- Result -->
+        <div class="output-container">
+            <h2 class="output-heading">Your Diagnosis Report</h2>
+            <div class="out-buttons">
+                <!-- Buttons to trigger different popups -->
+                <button onclick="openPopup('diseasePopup')" style="background-color: #F95454;">Disease</button>
+                <button onclick="openPopup('descriptionPopup')" style="background-color: #55AD9B;">Description</button>
+                <button onclick="openPopup('precautionPopup')"
+                    style="background-color: cornflowerblue;">Precaution</button>
+                <button onclick="openPopup('medicationPopup')" style="background-color: #50c878;">Medication</button>
+                <button onclick="openPopup('workoutPopup')" style="background-color: darkviolet;">Workout</button>
+                <button onclick="openPopup('dietsPopup')" style="background-color: #D7B26D;">Diets</button>
+            </div>
+        </div>
+        {% endif %}
+
+    </main>
+
+    <!-- Popup Overlays and Content for each topic -->
+
+    <div class="popup-overlay" id="diseasePopup">
+        <div class="popup-content">
+            <div class="popup--heading">
+                <h3>Disease</h3>
+                <button class="close-btn" onclick="closePopup('diseasePopup')"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="output-para">
+                <p>{{ predicted_disease }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="popup-overlay" id="descriptionPopup">
+        <div class="popup-content">
+            <div class="popup--heading">
+                <h3>Description</h3>
+                <button class="close-btn" onclick="closePopup('descriptionPopup')"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="output-para">
+                <p>{{ dis_des }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="popup-overlay" id="precautionPopup">
+        <div class="popup-content">
+            <div class="popup--heading">
+                <h3>Precaution</h3>
+                <button class="close-btn" onclick="closePopup('precautionPopup')"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="output-para">
+                <ul>
+                    {% for i in my_precautions %}
+                    <li>{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="medicationPopup">
+        <div class="popup-content">
+            <div class="popup--heading">
+                <h3>Medication</h3>
+                <button class="close-btn" onclick="closePopup('medicationPopup')"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="output-para">
+                <ul>
+                    {% for i in medications %}
+                    <li>{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="popup-overlay" id="workoutPopup">
+        <div class="popup-content">
+            <div class="popup--heading">
+                <h3>Workout</h3>
+                <button class="close-btn" onclick="closePopup('workoutPopup')"><i
+                        class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="output-para">
+                <ul>
+                    {% for i in workout %}
+                    <li>{{ i }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="popup-overlay" id="dietsPopup">
+        <div class="popup-content">
+            <div class="popup--heading">
+                <h3>Diets</h3>
+                <button class="close-btn" onclick="closePopup('dietsPopup')"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="output-para">
+                <ul>
+                    {% for i in my_diet %}
+                    <li>{{ i }}</li>
+                    {% endfor %}
+                </ul>87
+            </div>
+        </div>
+    </div>
+
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $('#symptoms').select2({
+                placeholder: "Select symptoms such as vomiting, acidity etc.",
+                allowClear: true,
+                //tags: true, // Allows users to add new symptoms dynamically
+                //tokenSeparators: [',', ' '] // Separate inputs with commas or spaces
+            });
+        });
+    </script>
+</body>
+
+</html>
