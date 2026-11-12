@@ -1,0 +1,280 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "Lato", sans-serif;
+  box-sizing: border-box;
+  text-decoration: none;
+}
+
+:root {
+  --btn-size: 16px;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+main {
+  padding: 0px 40px;
+}
+
+header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: 8px 5vw;
+  background-color:cornflowerblue;
+}
+
+.hamburger {
+  display: none;
+  cursor: pointer;
+  position: absolute;
+  right: 5vw;
+  z-index: 1000;
+}
+
+.hamburger .bar {
+  display: block;
+  width: 25px;
+  height: 3px;
+  background-color: white;
+  margin: 5px 0;
+  -webkit-transition: all ease-in-out 0.3s;
+  transition: all ease-in-out 0.3s;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.logo img {
+  width: 45px;
+  border-radius: 50px;
+}
+.logo h2 {
+  margin-left: 10px;
+  color: white;
+}
+
+header nav {
+  margin-left: 16px;
+}
+
+header nav a {
+  padding: 8px 16px;
+  font-size: var(--btn-size);
+  color: white;
+}
+
+nav a.active{
+  color: black;
+}
+
+
+header nav a:hover {
+  color: black;
+}
+
+/* <!-- input box --> */
+.input-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 50vh;
+}
+
+/* START */
+/* Container for the form */
+main .form-container {
+  width: 600px;
+  padding: 30px;
+  border: #50c878 1px solid;
+  border-radius: 6px;
+}
+
+/* Form Styling */
+main .form-container form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Label styling */
+form .form-label {
+  font-size: var(--btn-size);
+  color: #333;
+}
+
+
+
+
+/* Error message styling */
+.error-message {
+  color: red;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+/* Button Styling */
+.submit-btn {
+  padding: 12px 20px;
+  font-size: var(--btn-size);
+  background-color: #50c878;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #3cb163;
+}
+/* END END END */
+.output-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px;
+  height: 100%;
+}
+.out-buttons {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+  /* flex-direction: column; */
+}
+
+.out-buttons button {
+  font-size: var(--btn-size);
+  padding: 8px 16px;
+  outline: none;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 5px;
+  color: white;
+}
+
+/* Popup overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 0 25px;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: none;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Popup content box */
+.popup-content {
+  background-color: white;
+  width: 400px;
+  height: 250px;
+  text-align: center;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+
+  /* display: flex; */
+  flex-direction: column;
+  align-items: center;
+}
+
+.popup-content .output-para {
+  padding: 10px 30px;
+  text-align: justify;
+  width: 100%;
+  overflow-y: scroll;
+  font-size: var(--btn-size);
+}
+
+.popup--heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: black;
+  color: white;
+  padding: 8px 16px;
+  width: 100%;
+}
+.popup--heading h3{
+  padding: 0 20px;
+  width: 100%;
+}
+/* Close button */
+.close-btn {
+  display: flex;
+  font-size: 20px;
+  cursor: pointer;
+  background: none;
+  outline: none;
+  border: none;
+  color: white;
+}
+
+@media screen and (max-width: 768px) {
+  .hamburger {
+    display: block;
+    float: right;
+  }
+  #navMenu {
+    position: absolute;
+    flex-direction: column;
+    display: flex;
+    align-items: center;
+    background-color:cornflowerblue;
+    margin-top: 20px;
+    z-index: 99;
+    padding-bottom: 0;
+    top: 40px;
+    right: 0;
+    width: 100%;
+    max-height: 0;  
+    overflow: hidden;
+    transition: max-height 0.4s ease-in-out, padding 0.4s ease-in-out;
+}
+
+/* Show navigation when 'open' class is added */
+#navMenu.open {
+    max-height: 300px; 
+    padding-bottom: 20px;
+}
+
+
+  /* Change appearance when active */
+  .hamburger.active .bar:nth-child(1) {
+    transform: translateY(8px) rotate(45deg);
+  }
+
+  .hamburger.active .bar:nth-child(2) {
+    opacity: 0;
+  }
+
+  .hamburger.active .bar:nth-child(3) {
+    transform: translateY(-8px) rotate(-45deg);
+  }
+}
+
+@media screen and (max-width: 680px) {
+  main .form-container {
+    width: 100%;
+  }
+}
+@media screen and (max-width: 425px) {
+  .input-container {
+    height: 40vh;
+  }
+  .output-heading {
+    text-align: center;
+  }
+}
